@@ -1,0 +1,870 @@
+﻿<!DOCTYPE html>
+<html>
+<!--
+    版本说明：
+    1.解决了油滴显示不自然的问题
+    2.修改了提示的字体大小和颜色
+    3.去掉了标注
+    4.改变布局
+-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Balance Method</title>&nbsp;
+    <!--导引-->
+    <script>
+        const step1 = "请先观察右上方水平仪，然后将仪器调平。点击调平按钮，等待自动调平即可。";
+        const step2 = "请切换到工作模式，将工作状态调为“平衡”，然后将电压调至200V。";
+        const step3 = "点击喷油产生油滴，并调节焦距观察不同的油滴。选择合适的油滴之后，调节电压使其静止，并按平衡提升按钮使之上升至零刻线上。之后点击ov/工作键，使其自由下落。待液滴下落至零刻线，开始计时，下落至1.6mm，结束计时。";
+        const step4 = "若认为操作正确，请按确认键存储数据，否则将油滴复位到1.6mm刻度线以下，重新测量上升时间。";
+        const step5 = "请重复测量该油滴的上升及下落时间,一共测量5次。请再次点击提升按钮,并提升至0刻线以上，然后点击平衡";
+        const step51= "将工作状态切换至0伏，并在油滴下落到0刻线时开始计时（快捷键为J），下落到1.6mm刻线时，结束计时，快捷键为J。"
+        const step52= "确认操作无误后，请点击确认按钮储存数据，否则将油滴上升到0刻线重新测量。";
+        const step53= "请再次点击提升按钮,并提升至0刻线以上，然后点击平衡";//测剩下四组时，确认键按完之后显示
+        const step6 = "请再次按下确认键，计算该油滴所带电荷量。";
+        const step7 = "请按照上述方法重复测量不同油滴电荷量，一共测量5个油滴。";
+        const step8 = "请再次按下确认键，计算元电荷大小。";
+        const step9 = "恭喜你，实验完成！\n 再次点击确认键显示结果";
+
+    </script>
+    <style type="text/css">
+        h1 {
+            color: black;
+            text-align: center;
+            font-family: FangSong;
+            font-weight: bold;
+        }
+
+        p1 {
+            color: black;
+            text-indent: 2em;
+        }
+    </style>
+    <script>
+        var step = 0;
+        var intro_alert_switch = false;
+        // 导言的弹窗
+
+        function intro(n) {
+            switch (n) {
+                case 1:
+                    step += 1;
+                    if (intro_alert_switch) { setTimeout("alert(step1)", 100); }
+                    //window.alert(step1);
+                    document.getElementById("intro_text").innerHTML = step1;
+                    break;
+                case 2:
+                    step += 1;
+                    //myVar = setTimeout("alert('请切换到工作模式，将工作状态调为“平衡”，然后将电压调至200V')", 100);
+                    if (intro_alert_switch) { setTimeout("alert(step2)", 100); }
+                    document.getElementById("intro_text").innerHTML = step2;
+                    break;
+                case 3:
+                    step += 1;
+                    //myVar = setTimeout("alert('请点击喷油，产生油滴，此处可改变焦距观察半径大小不同的油滴，以选择合适的油滴。选好油滴后，调整电压大小使想要的油滴静止不动，并按“平衡/提升”键，使得油滴提升到0刻线以上。')", 100);
+                    //myVar = setTimeout("alert('在油滴上升到0刻线以上后，按“0V/工作”键，使得油滴在无电场作用下下落，并在油滴下落到0刻线时开始计时（快捷键为J），下落到1.6mm刻线时，结束计时，快捷键为J')", 10000);
+                    if (intro_alert_switch) { setTimeout("alert(step3)", 100); }
+                    document.getElementById("intro_text").innerHTML = step3;
+                    break;
+                case 4:
+                    step += 1;
+                    //myVar = setTimeout("alert('若认为操作正确，请按确认键存储数据，否则重新确认油滴的平衡电压，将油滴上升到0刻线重新测量')", 100);
+                    if (intro_alert_switch) { setTimeout("alert(step4)", 100); }
+                    document.getElementById("intro_text").innerHTML = step4;
+                    break;
+                case 5:
+                    step += 1;
+                    //myVar = setTimeout("alert('请重复测量该油滴的平衡电压及下落时间,一共测量5次’)", 100);
+                    if (intro_alert_switch) { setTimeout("alert(step5)", 100); }
+                    document.getElementById("intro_text").innerHTML = step5;
+                    break;
+                case 6:
+                    step += 1;
+                    //myVar = setTimeout("alert('请再次按下确认键，计算该油滴所带电荷量’)", 100);
+                    if (intro_alert_switch) { setTimeout("alert(step6)", 100); }
+                    document.getElementById("intro_text").innerHTML = step6;
+                    break;
+                case 7:
+                    step += 1;
+                    //myVar = setTimeout("alert('请按照上述方法重复测量不同油滴电荷量，一共测量5个油滴’)", 100);
+                    if (intro_alert_switch) { setTimeout("alert(step7)", 100); }
+                    document.getElementById("intro_text").innerHTML = step7;
+                    break;
+                case 8:
+                    step += 1;
+                    //myVar = setTimeout("alert('请再次按下确认键，计算元电荷大小’)", 100);
+                    if (intro_alert_switch) { setTimeout("alert(step8)", 100); }
+                    document.getElementById("intro_text").innerHTML = step8;
+                    break;
+                case 9:
+                    if (intro_alert_switch) { setTimeout("alert(step9)", 100); }
+                    document.getElementById("intro_text").innerHTML = step9;
+                    break;
+                case 10:
+                    if (intro_alert_switch) { setTimeout("alert(step51)", 100); }
+                    document.getElementById("intro_text").innerHTML = step51;
+                    break;
+                case 11:
+                    if (intro_alert_switch) { setTimeout("alert(step52)", 100); }
+                    document.getElementById("intro_text").innerHTML = step52;
+                    break;
+                case 12:
+                    if (intro_alert_switch) { setTimeout("alert(step53)", 100); }
+                    document.getElementById("intro_text").innerHTML = step53;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    </script>
+    <!--键鼠控制-->
+    <script>
+        //按钮控制
+        function button_control(value) {
+            switch (value) {
+                //1-4:电压控制
+                case 1:
+                    if (work_flag) {
+                        if (screen.cos_volt > 0 && work_flag) { screen.cos_volt -= 1; }
+                        //screen.cos_volt -= 1;
+                    }
+                    break;
+                case 2:
+                    if (work_flag) {
+                        screen.cos_volt += 1;
+                        if (step == 2 && screen.cos_volt >= 200) { intro(3) }
+                    }
+                    break;
+                case 3:
+                    if (work_flag) {
+                        if (screen.cos_volt >= 100) { screen.cos_volt -= 100; }
+                        else { screen.cos_volt = 0; }
+                    }
+                    break;
+                case 4:
+                    if (work_flag) {
+                        screen.cos_volt += 100;
+                        if (step == 2 && screen.cos_volt >= 200) { intro(3) }
+                    }
+                    break;
+                //6-7：焦距控制
+                case 6:
+                    screen.F += 1;
+                    document.getElementById("focal_len").value++;
+                    break;
+                case 7:
+                    screen.F -= 1;
+                    document.getElementById("focal_len").value--;
+                    break;
+                default:
+                    break;
+            }
+        }
+        //键盘控制
+        document.onkeydown = function (e) {
+            switch (e.which) {
+                //right
+                //case 39:
+                case 68:
+                    if (work_flag) {
+
+                        screen.cos_volt += 1;
+                        if (step == 2 && screen.cos_volt >= 200) { intro(3) }
+                    }
+                    break;
+                //left
+                //case 37:
+                case 65:
+                    if (screen.cos_volt > 0 && work_flag) { screen.cos_volt -= 1; }
+                    break;
+                //up
+                //case 38:
+                case 87:
+                    if (work_flag) {
+                        screen.cos_volt += 100;
+                        if (step == 2 && screen.cos_volt >= 200) { intro(3) }
+                    }
+                    break;
+                //down
+                //case 40:
+                case 83:
+                    if (work_flag) {
+                        if (screen.cos_volt >= 100) { screen.cos_volt -= 100; }
+                        else { screen.cos_volt = 0; }
+                    }
+                    break;
+                //计时开关(key j)
+                case 74:
+                    reverse_timer_flag();
+                    break;
+                //case 75://k
+                //ctx.fillText("Q" + (q_counter+1).toFixed(0) + "=" + data_q[q_counter].toFixed(2) + " x 10^(-19)C", 970, 190 + 50 * q_counter);
+                // break;
+                default:
+                    break;
+
+            }
+        }
+    </script>
+
+
+
+</head>
+<body>
+
+    &nbsp;
+    <!--标题-->
+    <div id="ex_part_header" style="height:35px;width:1300px;background-color:#bae5fb; border:double ">
+        <h1 style="margin-bottom:0;" align="center">密立根油滴仿真实验(Millikan Oil Drop Experiment)</h1>
+        
+    </div>
+    <!--屏幕画布-->
+    <canvas id="ex_part_canvas" width="1270" height="500" border:1px="" style="border: solid #000000;margin-left:20px"></canvas>
+    <script>
+        var ex_part_canvas = document.getElementById("ex_part_canvas");
+        var ctx = ex_part_canvas.getContext("2d");
+    </script>
+
+    <!--操作台-->
+    <style type="text/css">
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrap { /*操作台*/
+            width: 800px;
+            height: 200px;
+            margin-left: 50px;
+            background: lightsteelblue;
+            padding: 30px 50px;
+            float: left;
+        }
+
+
+        .button0 { /*按钮样式*/
+            outline-style: none; /*去除点击时外部框线*/
+            width: 100px;
+            height: 100px;
+            float: left;
+            text-align: center;
+            padding-top: 10px;
+            margin-left: 10px;
+            background: lightblue;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0px 9px 0px rgba(144,144,144,1),0px 9px 25px rgba(0,0,0,.7);
+        }
+
+            .button0:hover {
+                background: greenyellow;
+            }
+
+            .button0:active {
+                background: greenyellow;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+                transition-duration: 0s; /*过渡效果持续时间*/
+            }
+
+        .button1 {
+            outline-style: none; /*去除点击时外部框线*/
+            width: 95px;
+            height: 90px;
+            padding-top: 10px; /*文字的位置*/
+            margin-left: 10px; /*间距*/
+            color: black;
+            /*position: absolute;*/
+            background: yellow;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0px 9px 0px rgba(144,144,144,1),0px 9px 25px rgba(0,0,0,.7);
+        }
+
+            .button1:hover {
+                background: gold;
+            }
+
+            .button1:active {
+                background: gold;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+                transition-duration: 0s; /*过渡效果持续时间*/
+            }
+
+        .button2 {
+            outline-style: none; /*去除点击时外部框线*/
+            width: 130px;
+            height: 90px;
+            padding-top: 10px; /*文字的位置*/
+            margin-left: 20px; /*间距*/
+            color: black;
+            /*position: absolute;*/
+            background: lightgreen;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0px 9px 0px rgba(144,144,144,1),0px 9px 25px rgba(0,0,0,.7);
+        }
+
+            .button2:hover {
+                background: greenyellow;
+            }
+
+            .button2:active {
+                background: greenyellow;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+                transition-duration: 0s; /*过渡效果持续时间*/
+            }
+    </style>
+    <div class="wrap">
+        <div id="content" style="background-color:#EEEEEE;height:140px;width:780px;float:left;">
+            <canvas id="ex_part_canvas1" width="780" height="10"></canvas>
+            <script>
+                var ex_part_canvas1 = document.getElementById("ex_part_canvas1");
+                var ctx1 = ex_part_canvas1.getContext("2d");
+            </script>
+            <script>
+                //画灯
+                function drawLight(px, py, r, color) {
+                    ctx1.beginPath();
+                    ctx1.arc(px, py, r, 0, 2 * Math.PI);
+                    ctx1.closePath();
+                    ctx1.fillStyle = color;
+                    ctx1.fill();
+                    ctx1.strokeStyle = "black";
+                    ctx1.stroke();
+                    ctx1.fillText(100, 0, 0);
+                }
+            </script>
+            <!--工作台上层-->
+            <button class="button0" onclick="reverse_level_flag()"><font size="4">调平</font> </button>
+            <button class="button0" onclick="reverse_timer_flag()"><font size="4" id="id3">计时开关(j)</font> </button>
+            <button class="button0" onclick="reverse_work_flag()"><font size="4" color="red" id="id1">0V</font>/<font size="4" id="id2">工作</font></button>
+            <button class="button0" onclick="reverse_modle_flag()"><font size="4" color="red" id="id4">平衡</font>/<font size="4" id="id5">提升</font></button>
+            <button class="button0" onclick="confirm()"><font size="5">确认</font></button>
+            <article> <br>&emsp;&emsp;<font size="5">调焦按钮</font></article>
+            &emsp;&emsp;<input type="range" id="focal_len" value="50" min="0" max="100" step="1">
+        </div>
+        <button class="button1" onclick="oil_inject()"><font size="4">喷油</font></button>
+        <button class="button2" onclick="button_control(1)"><font size="4">电压减(-1v)</font></button>
+        <button class="button2" onclick="button_control(2)"><font size="4">电压加(+1v)</font></button>
+        <button class="button2" onclick="button_control(3)"><font size="4">电压减(-100v)</font></button>
+        <button class="button2" onclick="button_control(4)"><font size="4">电压加(+100v)</font></button>
+        <!--<button class="button1" onclick="button_control(7)"><font size="4">焦距减</font></button>
+        <button class="button1" onclick="button_control(6)"><font size="4">焦距加</font></button>
+        -->
+    </div>
+
+    <!--导引框-->
+    <div id="content" style="background-color:#ffffff;height:250px;width:318px;border:solid #000000;margin-left:972px;">
+        <h1 style="color:red">提示</h1>
+        <p1 id="intro_text" style="color:red;font-size:20px">这里是提示</p1>
+    </div>
+
+    <div id="footer" style="height:20px;width:1300px;background-color:#bae5fb; border:double; text-align:center; margin-top:20px">
+    </div>
+
+    <!--屏幕-->
+    <script>
+        //屏幕
+        var screen = new Object();
+        screen.width = 900;
+        screen.height = 500;
+        screen.x = 50;
+        screen.y = 0;
+        screen.start_pos = 0;
+        screen.end_pos = 1.6;
+        screen.volt = 0.0;
+        screen.cos_volt = 0.0;
+        screen.time = 0.0;
+        screen.way = "平衡法";
+        screen.F = 30;
+
+        //画网格
+        function draw_grid() {
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(screen.x, screen.y, screen.width, screen.height);
+            for (var i = 50; i < screen.height; i = i + 50) {
+                ctx.moveTo(screen.x, screen.y + i);
+                ctx.lineTo(screen.x + screen.width, screen.y + i);
+            }
+            for (var i = 300; i < screen.width; i = i + 300) {
+                ctx.moveTo(screen.x + i, screen.y);
+                ctx.lineTo(screen.x + i, screen.y + screen.height);
+            }
+            ctx.stroke();
+            //屏幕上的标注
+            var px_Text = screen.x + screen.width - 100;
+            ctx.font = "20px Georgia";
+            ctx.fillStyle = "black";
+            ctx.fillText(screen.start_pos, screen.x + screen.width / 3 - 15, screen.y + screen.height / 10);
+            ctx.fillText(screen.end_pos, screen.x + screen.width / 3 - 25, screen.y + screen.height / 10 * 9);
+            if (work_flag) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText("V:" + screen.cos_volt + "v", screen.x + screen.width - 100, screen.y + screen.height / 10 - 30);
+            if (timer_flag) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText("t:" + screen.time + "s", screen.x + screen.width - 100, screen.y + screen.height / 10 - 5);
+            //if (){ctx.fillStyle = "red";} else{ctx.fillStyle = "black";}
+            ctx.fillStyle = "black";
+            ctx.fillText("+" + screen.volt + "v", screen.x + screen.width - 100, screen.y + screen.height / 10 * 2 - 5);
+            ctx.fillStyle = "black";
+            ctx.fillText("平衡法", screen.x + screen.width - 100, screen.y + screen.height / 10 * 9 - 5);
+            for (var tmp = 0 ; tmp<5; tmp++){
+
+            if (ex_counter == tmp){ ctx.fillStyle = "red";} else {ctx.fillStyle = "black"};
+
+            ctx.fillText(data_time[tmp].toFixed(2) + " s", px_Text, screen.y + screen.height / 10 * (tmp+3) - 5);
+            ctx.fillText(data_volt[tmp].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * (tmp+3) - 30);
+            }
+            /*if (ex_counter - 1 == 0) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText(data_time[0].toFixed(2) + " s", px_Text, screen.y + screen.height / 10 * 3 - 5);
+            ctx.fillText(data_volt[0].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * 3 - 30);
+            if (ex_counter - 1 == 1) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText(data_time[1].toFixed(2) + " s", px_Text, screen.y + screen.height / 10 * 4 - 5);
+            ctx.fillText(data_volt[1].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * 4 - 30);
+            if (ex_counter - 1 == 2) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText(data_time[2].toFixed(2) + " s", px_Text, screen.y + screen.height / 10 * 5 - 5);
+            ctx.fillText(data_volt[2].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * 5 - 30);
+            if (ex_counter - 1 == 3) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText(data_time[3].toFixed(2) + " s", px_Text, screen.y + screen.height / 10 * 6 - 5);
+            ctx.fillText(data_volt[3].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * 6 - 30);
+            if (ex_counter - 1 == 4) { ctx.fillStyle = "red"; } else { ctx.fillStyle = "black"; }
+            ctx.fillText(data_time[4].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * 7 - 5);
+            ctx.fillText(data_volt[4].toFixed(2) + " v", px_Text, screen.y + screen.height / 10 * 7 - 30);
+            ctx.fillStyle = "black";
+            ctx.fillText("step" + step.toFixed(0), px_Text, screen.y + screen.height / 10 * 8 - 30);*/
+
+            var i;
+            for (i = 0; i < 5; i++) {
+                ctx.fillText("Q" + (i + 1).toFixed(0) + "=" + data_q[i].toFixed(2) + " x 10^(-19)C", 1000, 240 + 50 * i);
+            }
+
+        }
+    </script>
+
+    <!--调平 -->
+    <script>
+        var ex_scope = new Object(); //外边界
+        ex_scope.x = screen.x + screen.width + 100;
+        ex_scope.y = screen.y + 100;
+        ex_scope.radius = 60;
+        ex_scope.color = "#C8C8C8";
+
+        var in_scope = new Object();//内边界
+        in_scope.x = screen.x + screen.width + 100;
+        in_scope.y = screen.y + 100;
+        in_scope.radius = 40;
+        in_scope.color = "white";
+
+        var circle = new Object();
+        circle.x = screen.x + screen.width + 100;
+        circle.y = screen.y + 100;
+        circle.radius = 20;
+        circle.color = "white";
+
+        var tmp = Math.random() * 60 - 30;
+        var x_dis = parseFloat(tmp.toFixed(1));
+        tmp = Math.random() * 60 - 30;
+        var y_dis = parseFloat(tmp.toFixed(1));
+
+        var bubble = new Object();
+        bubble.x = parseFloat(x_dis) + circle.x;
+        bubble.y = parseFloat(y_dis) + circle.y;
+        bubble.radius = 10;
+        bubble.color = "white";
+        var k = y_dis / x_dis; //斜率
+
+        var bubble_flag = parseInt(Math.abs(x_dis / 0.01));
+
+
+
+        function drawCircle(px, py, r, color) {
+            ctx.beginPath();
+            ctx.arc(px, py, r, 0, 2 * Math.PI);
+            ctx.closePath();
+
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+        }
+
+
+        function clearLevel() {
+            ctx.clearRect(ex_scope.x - ex_scope.radius - 1, ex_scope.y - ex_scope.radius - 1, (ex_scope.radius + 1) * 2, (ex_scope.radius + 1) * 2);
+        }
+        function moveBubble1() {
+            bubble.x -= 0.1;
+            x_dis -= 0.1;
+            bubble.y = circle.y + x_dis * k;
+        }
+        function moveBubble2() {
+            bubble.x += 0.1;
+            x_dis += 0.1;
+            bubble.y = circle.y + x_dis * k;
+        }
+        function drawLevel() {
+            drawCircle(ex_scope.x, ex_scope.y, ex_scope.radius, ex_scope.color); //画外圈圈
+            drawCircle(in_scope.x, in_scope.y, in_scope.radius, in_scope.color); //画内圈圈
+            drawCircle(circle.x, circle.y, circle.radius, circle.color); //画水平区
+            //画气泡
+            ctx.beginPath();
+            ctx.arc(bubble.x, bubble.y, bubble.radius, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+        }
+        function level() {
+            //if (bubble_flag < 0) {
+                if (x_dis > 0) {
+                    clearLevel();
+                    moveBubble1()
+                    drawLevel();
+                    bubble_flag -= 10;
+                    //if (step == 1 && bubble_flag == 0) intro(2);
+
+                }
+                else if (x_dis < 0) {
+                    clearLevel();
+                    moveBubble2()
+                    drawLevel();
+                    bubble_flag -= 10;
+                    //if (step == 1 && bubble_flag == 0) intro(2);
+                    
+                }
+            //}
+            if  (bubble_flag == 0){
+            if (step == 1) intro(2);
+            clearInterval(level_animation);
+            }
+        }
+
+        //function Level() {
+        //    var level_animation = setInterval(level, 10);
+        //}
+
+    </script>
+
+    <!--指示灯-->
+    <script>
+        drawLight(250, 5, 3, 'red');//0v
+        drawLight(310, 5, 3, 'white');//工作
+        drawLight(170, 5, 3, 'white');//计时关
+        drawLight(360, 5, 3, 'red');//平衡
+        drawLight(420, 5, 3, 'white');//提升
+    </script>
+
+    <!--油滴-->
+    <script>
+        var oil_num = 100;// Math.random() * 30+ 3;//油滴数量
+        var i;//控制变量
+
+        Array.prototype.radius = new Array();//像素半径
+        Array.prototype.r = new Array();//物理半径
+        Array.prototype.x = new Array();
+        Array.prototype.y = new Array();
+        Array.prototype.z = new Array();//液滴纵深方向的坐标z
+        Array.prototype.q = new Array();
+        Array.prototype.vel = new Array();
+        Array.prototype.fl = new Array();
+        Array.prototype.opacity = new Array();
+        Array.prototype.draw = function (value) {
+            ctx.strokeStyle = "rgba(0,0,0,0)";
+            ctx.fillStyle = "rgba(0,0,0,"+ this.opacity[value] + ")" ;
+            ctx.beginPath();
+            ctx.arc(this.x[value], this.y[value], this.radius[value], 0, 2 * Math.PI)
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+        }
+        var ball = new Array();
+
+        function creat_oil_drop(sn, r, px, py, ni) {//生成新油滴（序号，物理半径（m），x坐标，y坐标，带元电荷数量）
+            ball.r[sn] = r;
+            ball.radius[sn] = r * 1000 * 250 * 10;
+            ball.x[sn] = px;
+            ball.y[sn] = py;
+            ball.z[sn] = Math.round((Math.random() * 100));
+            ball.q[sn] = -ni * 1.602176487 * Math.pow(10, -19);
+            ball.vel[sn] = (4 * Math.PI * 5e-3 * 9.794 * 977.707 * ball.r[sn] ** 3 + 3 * screen.cos_volt * ball.q[sn]) / (18 * Math.PI * 5e-3 * ball.r[sn] * 1.83e-5);
+        }
+
+        //喷油
+        function oil_inject() {
+            function rand_num() {/*找到一个服从正态分布的随机数*/
+                var u = 0.0, v = 0.0, w = 0.0, c = 0.0;
+                const ave = 0.6//均值 单位:um
+                const variance = 0.5//0.000006//方差
+                do {
+                    u = Math.random() * 2 - 1.0;//获得两个（-1,1）的独立随机变量
+                    v = Math.random() * 2 - 1.0;
+                    w = u * u + v * v;
+                } while (w == 0.0 || w >= 1.0)
+                //Box-Muller转换
+                c = Math.sqrt((-2 * Math.log(w)) / w);//u*c即为满足标准正太分布的随机数
+                return (c * u) * ave + variance;//将标准正太分布化为非标准正态分布
+            }
+            for (i = 0; i < oil_num; i++) {
+                do {
+                    var r = 0.000001 * Math.abs(rand_num());
+                } while (r == 0 || r > 3e-6)
+                creat_oil_drop(i, r, 55 + Math.random() * 600, 30 + Math.random() * 400, Math.random() * 15);//55,600,30,400是油滴出现的位置的参数，后期调油滴出现的位置调这几个
+            }
+        }
+
+        //焦距函数，将用户当前焦距和小球z坐标转换为一个不透明度
+        function focus(Z, Foc)   //小球z坐标，用户当前焦距
+        {
+            if (Math.abs((Z - Foc)) < 5) {
+                return (1 - 0.2 * Math.abs(Z - Foc));       //返回一个不透明度。1代表不透明，0代表透明
+            }
+            else {
+                return 0;
+            }
+        }
+    </script>
+
+    <!--计算-->
+    <script>
+        var ex_counter = 0;
+        var q_counter = 0;//电荷个数
+        var data_volt = new Array(0, 0, 0, 0, 0);
+        var data_time = new Array(0, 0, 0, 0, 0);
+        var data_q = new Array(0, 0, 0, 0, 0);
+        var result;
+        Array.prototype.Average = function (value) {//求平均值
+            var i;
+            var avg = 0;
+            var sum = 0;
+            for (i = 0; i < value; i++) {
+                sum += this[i];
+            }
+            avg = sum / value;
+            return avg;
+        }
+        Array.prototype.get_result = function (value) {//线性回归分析，只返回斜率
+            window.alert("开始计算");
+            var i, xa, ya, Lxx = 0, Lxy = 0;
+            var num = new Array();
+            for (i = 0; i < this.length; i++) {
+                num[i] = Math.round(this[i] / 1.602176487);
+            }
+            var result_a = 0;
+            var result_b = 0;
+            xa = num.Average(5);
+            ya = this.Average(5);
+            for (i = 0; i < this.length; i++) {
+                Lxx += ((num[i] - xa) * (num[i] - xa));
+                Lxy += ((num[i] - xa) * (this[i] - ya));
+            }
+            result_b = Lxy / Lxx;
+            //result_a = ya - b * xa;
+            return result_b.toFixed(4);
+        }
+
+        //计算电荷量的公式
+        const instrument_c = 9 * 1.414 * Math.PI * 5e-3 * Math.pow((1.83e-5 * 1.6e-3) ** 3 / 977.707 / 9.794, 0.5);
+        const correct_term = Math.pow((1 / (1 + 0.00823 / 101325 / 6e-7)), 3 / 2);
+        function calculate_e_mothod2(U, Te, Tg)//电压，在电场作用下上升的时间，仅在重力作用下下降的时间(动态法)
+        {
+            return (1.595 * Math.pow(10, -11) / U) * ((1 / Te) + (1 / Tg)) * Math.pow((1 / Tg), 0.5);
+        }
+        function calculate_e_mothod1(U, Tg)//电压，在电场作用下上升的时间，仅在重力作用下下降的时间(平衡法)
+        {
+            return instrument_c / U * Math.pow((1 / Tg), 3 / 2) * correct_term;
+        }
+    </script>
+
+    <!--屏幕刷新-->
+    <script>
+        const delt_t = 10;//时间步长（ms）
+        var t = 0;//计时变量
+        var timer_flag = false;//计时开关
+        function reverse_timer_flag() {
+            if (!timer_flag) {
+                document.getElementById('id3').style.color = 'red';
+                drawLight(170, 5, 3, 'red');//计时器开
+                t = 0;
+            }
+            else {
+                document.getElementById('id3').style.color = 'black';
+                drawLight(170, 5, 3, 'white');//计时器关
+                if (!work_flag) {
+                    reverse_work_flag();
+                    if (step == 3) { intro(4) }
+                    if (step == 5) { intro(11)}
+                }
+            }
+            timer_flag = !timer_flag;
+        }
+        function clear() {
+            ctx.clearRect(screen.x, screen.y, screen.width, screen.height);
+            ctx.clearRect(screen.x + screen.width, screen.y + 200, 1200, screen.height);
+        }
+        function move() {
+            var i;//控制变量
+            for (i = 0; i < oil_num; i++) {
+                ball.vel[i] = (4 * Math.PI * 5e-3 * 9.794 * 977.707 * ball.r[i] ** 3 + 3 * screen.cos_volt * ball.q[i]) / (18 * Math.PI * 5e-3 * ball.r[i] * 1.83e-5);
+                ball.y[i] = ball.y[i] + ball.vel[i] * delt_t * 250;
+            }
+        }
+        function drawstage() {
+            var j;//控制变量
+            if (timer_flag) { t = t + delt_t / 1000; }
+            screen.time = t.toFixed(2);
+            clear();
+            draw_grid();
+            move();
+            screen.F = document.getElementById("focal_len").value;
+            for (j = 0; j < oil_num; j++) {
+                if (((ball.y[j] + ball.radius[j]) < (screen.y + screen.height)) && ((ball.y[j] - ball.radius[j]) > screen.y)) {
+                    ball.opacity[j] = focus(ball.z[j], screen.F);
+                    if (ball.opacity[j] > 0) {ball.draw(j);}
+                    if (ball.opacity[j] > 0) {ball.draw(j);}
+                    else{
+                        ctx.beginPath();
+                        ctx.arc(ball.x[j], ball.y[j], 0, 0, 0);
+                        ctx.closePath();
+                    }
+                }
+                else {
+                    ctx.beginPath();
+                    ctx.arc(ball.x[j], ball.y[j], 0, 0, 0);
+                    ctx.closePath();
+                }
+            }
+            if (bubble_flag != 0) {
+                if (!level_flag) { drawLevel(); }
+                else {
+                    level();
+                }
+            }
+
+
+
+
+        }
+    </script>
+
+    <!--按键控制-->
+    <script>
+        var level_flag = false;//调平
+        var work_flag = false;//（0V/工作），false指向0V，true指向工作
+        var modle_flag = 0;//0指向平衡，1指向提升
+        var swop_volt = 0;
+        const ex_num = 5;
+        var volt_color_flag = false;
+        function reverse_level_flag() {
+            if (bubble_flag != 0 && !level_flag) { level_flag = !level_flag }
+        }
+        function reverse_work_flag() {
+            work_flag = !work_flag;
+            if (!work_flag) { //切换为0v
+                if (modle_flag == 0){
+                    swop_volt = screen.cos_volt;
+                    screen.volt = swop_volt; 
+                }
+                else {
+                    swop_volt = screen.cos_volt;
+                    screen.volt = swop_volt - 200; 
+                }
+                screen.cos_volt = 0;
+                drawLight(250, 5, 3, 'red');//0v
+                drawLight(310, 5, 3, 'white');//工作
+                document.getElementById('id1').style.color = 'red';
+                document.getElementById('id2').style.color = 'black';
+            }
+            else {// 切换为工作
+                drawLight(250, 5, 3, 'white');
+                drawLight(310, 5, 3, 'red');
+                if (modle_flag == 0) { 
+                screen.cos_volt = screen.volt;}
+                else {reverse_modle_flag();}
+                document.getElementById('id1').style.color = 'black';
+                document.getElementById('id2').style.color = 'red';
+            }
+        }
+        function reverse_modle_flag() {
+            if (work_flag) {
+                
+                if (modle_flag == 0) {
+                    screen.volt = screen.cos_volt;
+                    screen.cos_volt += 200;
+                    modle_flag = 1;
+                    drawLight(360, 5, 3, 'white');//平衡
+                    drawLight(420, 5, 3, 'red');//提升
+                    document.getElementById('id4').style.color = 'black';
+                    document.getElementById('id5').style.color = 'red';
+                }
+                else {
+                    //if (screen.cos_volt > 200) { screen.cos_volt -= 200 }
+                    //else { screen.cos_volt = 0; }
+                    if(step==5){intro(10)}
+                    screen.cos_volt = screen.volt;
+                    modle_flag = 0;
+                    drawLight(360, 5, 3, 'red');//平衡
+                    drawLight(420, 5, 3, 'white');//提升
+                    document.getElementById('id4').style.color = 'red';
+                    document.getElementById('id5').style.color = 'black';
+                }
+            }
+        }
+        function confirm() {
+            if (step == 4){ 
+                 intro(5) 
+                 //step=2;
+               }
+            if (q_counter < 5) {
+                if (ex_counter < ex_num) {
+                    if (!timer_flag) {
+                        data_time[ex_counter] = t;
+                        t = 0;
+                    }
+                    data_volt[ex_counter] = screen.volt;
+                    ex_counter += 1;
+                    if(step==5&&(ex_counter>1&&ex_counter<ex_num)){intro(12)}
+                    if (step == 5 && ex_counter == ex_num) { intro(6) }
+
+                }
+                else {
+                    //calculate data_q[q_counter]
+                    data_q[q_counter] = 1e19 * calculate_e_mothod1(data_volt.Average(ex_num), data_time.Average(ex_num));
+                    window.alert("Q=" + data_q[q_counter].toFixed(2) + " ×10^(-19)C");
+                    //ctx.fillText("Q" + (q_counter+1).toFixed(0) + "=" + data_q[q_counter].toFixed(2) + " x 10^(-19)C", 970, 190 + 50 * q_counter);
+                    q_counter += 1;
+                    if (step == 7 && q_counter == 5) { intro(8) }
+                    var k;//控制变量
+                    for (k = 0; k < ex_num; k++) {
+                        data_time[k] = 0;
+                        data_volt[k] = 0;
+                    }
+                    ex_counter = 0;
+                    if (step == 6) intro(7);
+                }
+            }
+            else {
+                result = data_q.get_result();
+                window.alert("由线性拟合得："+"e=" + result + "×10^(-19)C");
+                if (step == 8) { intro(9) }
+                //calculate elementary charge
+            }
+
+
+        }
+    </script>
+
+    <!--main-->
+    <script>
+        setTimeout("alert('全屏浏览效果更佳：按F11键或用“ctrl+滚轮”调整')", 100);
+        drawstage();
+        intro(1);
+        setInterval(drawstage, delt_t);
+    </script>
+
+
+</body>
+</html>
